@@ -10,7 +10,7 @@ public class RequestBodyLoggerFilterAttribute : Attribute, IAsyncActionFilter
     {
         var configuration = context.HttpContext.RequestServices.GetService<IOptionsSnapshot<RequestBodyLoggerOptions>>()?.Value;
 
-        if (configuration is { Allow: true })
+        if (configuration is not { Allow: true })
         {
             await next();
             return;
