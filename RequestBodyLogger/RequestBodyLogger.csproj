@@ -7,6 +7,10 @@
         <OutputType>Library</OutputType>
         <RootNamespace>RequestBodyLogger</RootNamespace>
         <AssemblyName>RequestBodyLogger</AssemblyName>
+        <IsPackable>true</IsPackable>
+        <RepositoryType>Git</RepositoryType>
+        <RepositoryUrl>https://github.com/lucaslenglet/RequestBodyLogger</RepositoryUrl>
+        <Authors>LENGLET Lucas</Authors>
     </PropertyGroup>
 
 </Project>
