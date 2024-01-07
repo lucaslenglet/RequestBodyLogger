@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace RequestBodyLogger;
 
@@ -21,28 +21,23 @@ public static class RequestBodyLoggerExtensions
     
     public static IApplicationBuilder UseRequestBodyLogger(this IApplicationBuilder app)
     {
-        app.Use(async (context, next) =>
-        {
-            var configuration = context.RequestServices.GetService<IOptionsSnapshot<RequestBodyLoggerOptions>>()?.Value;
-
-            if (configuration is { Allow: true })
-            {
-                context.Request.EnableBuffering();
-            }
-    
-            await next();
-        });
-        
-        return app;
+        return app.UseMiddleware<RequestBodyLoggerMiddleware>();
     }
     
     private static IServiceCollection AddRequestBodyLogger(
         this IServiceCollection serviceCollection, 
-        string? sectionName = null,
+        string? sectionName = default,
         Action<RequestBodyLoggerOptions>? configure = default)
     {
+        if (sectionName is null && configure is null)
+        {
+            throw new ArgumentNullException();
+        }
+        
+        serviceCollection.TryAddTransient<RequestBodyLoggerMiddleware>();
+        
         var optionsBuilder = serviceCollection.AddOptions<RequestBodyLoggerOptions>();
-
+        
         if (sectionName is not null)
         {
             optionsBuilder.BindConfiguration(sectionName);
